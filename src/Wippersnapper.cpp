@@ -501,13 +501,26 @@ bool initializeI2CBus(wippersnapper_i2c_v1_I2CBusInitRequest msgInitRequest,
                       int i2cPort) {
   // TODO: i2cPort is not handled right now, we should add support for multiple
   // i2c ports!
-  if (WS._isI2CPort0Init)
-    return true;
-  // Initialize bus
-  WS._i2cPort0 = new WipperSnapper_Component_I2C(&msgInitRequest);
-  WS.i2cComponents.push_back(WS._i2cPort0);
-  WS._isI2CPort0Init = WS._i2cPort0->isInitialized();
-  return WS._isI2CPort0Init;
+  if (i2cPort == 0)
+    if (WS._isI2CPort0Init)
+      return true;
+    // Initialize bus
+    WS._i2cPort0 = new WipperSnapper_Component_I2C(&msgInitRequest);
+    WS.i2cComponents.push_back(WS._i2cPort0);
+    WS._isI2CPort0Init = WS._i2cPort0->isInitialized();
+    return WS._isI2CPort0Init;
+    
+  if (i2cPort == 1)
+    if (WS._isI2CPort1Init)
+      return true;
+    // Initialize bus
+    WS._i2cPort1 = new WipperSnapper_Component_I2C(&msgInitRequest);
+    WS.i2cComponents.push_back(WS._i2cPort1);
+    WS._isI2CPort1Init = WS._i2cPort1->isInitialized();
+    return WS._isI2CPort1Init;
+  
+  //Currently not more than 2 i2c buses handled
+  return false;  
 }
 
 /******************************************************************************************/
@@ -1867,6 +1880,10 @@ ws_status_t Wippersnapper::run() {
   // Process I2C sensor events
   if (WS._isI2CPort0Init)
     WS._i2cPort0->update();
+  WS.feedWDT();
+
+  if (WS._isI2CPort1Init)
+    WS._i2cPort1->update();
   WS.feedWDT();
 
   return WS_NET_CONNECTED; // TODO: Make this funcn void!
