@@ -560,7 +560,6 @@ bool cbDecodeI2CDeviceInitRequestList(pb_istream_t *stream,
       wippersnapper_signal_v1_I2CResponse_init_zero;
   msgi2cResponse.which_payload =
       wippersnapper_signal_v1_I2CResponse_resp_i2c_device_init_tag;
-  if (msgI2CDeviceInitRequest.i2c_port_number == 1)
 
   // Check I2C bus
   if (!initializeI2CBus(msgI2CDeviceInitRequest.i2c_bus_init_req, msgI2CDeviceInitRequest.i2c_port_number)) {
