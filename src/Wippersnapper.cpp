@@ -550,10 +550,11 @@ bool cbDecodeI2CDeviceInitRequestList(pb_istream_t *stream,
   WipperSnapper_Component_I2C *_i2cTmpPort = NULL;
   if (msgI2CDeviceInitRequest.i2c_port_number == 0)
     _i2cTmpPort = WS._i2cPort0;
-  if (msgI2CDeviceInitRequest.i2c_port_number == 1)
+  else if (msgI2CDeviceInitRequest.i2c_port_number == 1)
     _i2cTmpPort = WS._i2cPort1;
   else
     WS_DEBUG_PRINTLN("ERROR: Unsupported bus in msgI2CDeviceInitRequest message.");
+    return false;
 
   // Create response
   wippersnapper_signal_v1_I2CResponse msgi2cResponse =
@@ -628,14 +629,14 @@ bool cbDecodeSignalRequestI2C(pb_istream_t *stream, const pb_field_t *field,
       return false; // fail out if we can't decode the request
     }
 
-  WipperSnapper_Component_I2C *_i2cTmpPort = NULL;
-  if (msgScanReq.i2c_port_number == 0)
-    _i2cTmpPort = WS._i2cPort0;
-  if (msgScanReq.i2c_port_number == 1)
-    _i2cTmpPort = WS._i2cPort1;
-  else
-    WS_DEBUG_PRINTLN("ERROR: Unsupported bus in msgScanReq message.");
-
+    WipperSnapper_Component_I2C *_i2cTmpPort = NULL;
+    if (msgScanReq.i2c_port_number == 0)
+      _i2cTmpPort = WS._i2cPort0;
+    else if (msgScanReq.i2c_port_number == 1)
+      _i2cTmpPort = WS._i2cPort1;
+    else
+      WS_DEBUG_PRINTLN("ERROR: Unsupported bus in msgScanReq message.");
+      return false;
 
     // Empty response message
     wippersnapper_i2c_v1_I2CBusScanResponse scanResp =
@@ -708,10 +709,11 @@ bool cbDecodeSignalRequestI2C(pb_istream_t *stream, const pb_field_t *field,
     WipperSnapper_Component_I2C *_i2cTmpPort = NULL;
     if (msgI2CDeviceInitRequest.i2c_port_number == 0)
       _i2cTmpPort = WS._i2cPort0;
-    if (msgI2CDeviceInitRequest.i2c_port_number == 1)
+    else if (msgI2CDeviceInitRequest.i2c_port_number == 1)
       _i2cTmpPort = WS._i2cPort1;
     else
       WS_DEBUG_PRINTLN("ERROR: Unsupported bus in I2CDeviceInitRequest message.");
+      return false;
 
     // Create empty response
     msgi2cResponse = wippersnapper_signal_v1_I2CResponse_init_zero;
@@ -760,14 +762,15 @@ bool cbDecodeSignalRequestI2C(pb_istream_t *stream, const pb_field_t *field,
       return false; // fail out if we can't decode
     }
 
-  // Define convienience bus for manipulation
-  WipperSnapper_Component_I2C *_i2cTmpPort = NULL;
-  if (msgI2CDeviceUpdateRequest.i2c_port_number == 0)
-    _i2cTmpPort = WS._i2cPort0;
-  if (msgI2CDeviceUpdateRequest.i2c_port_number == 1)
-    _i2cTmpPort = WS._i2cPort1;
-  else
-    WS_DEBUG_PRINTLN("ERROR: Unsupported bus in msgI2CDeviceUpdateRequest message.");
+    // Define convienience bus for manipulation
+    WipperSnapper_Component_I2C *_i2cTmpPort = NULL;
+    if (msgI2CDeviceUpdateRequest.i2c_port_number == 0)
+      _i2cTmpPort = WS._i2cPort0;
+    else if (msgI2CDeviceUpdateRequest.i2c_port_number == 1)
+      _i2cTmpPort = WS._i2cPort1;
+    else
+      WS_DEBUG_PRINTLN("ERROR: Unsupported bus in msgI2CDeviceUpdateRequest message.");
+      return false;
 
     // Empty I2C response to fill out
     msgi2cResponse = wippersnapper_signal_v1_I2CResponse_init_zero;
@@ -805,10 +808,11 @@ bool cbDecodeSignalRequestI2C(pb_istream_t *stream, const pb_field_t *field,
     WipperSnapper_Component_I2C *_i2cTmpPort = NULL;
     if (msgI2CDeviceDeinitRequest.i2c_port_number == 0)
       _i2cTmpPort = WS._i2cPort0;
-    if (msgI2CDeviceDeinitRequest.i2c_port_number == 1)
+    else if (msgI2CDeviceDeinitRequest.i2c_port_number == 1)
       _i2cTmpPort = WS._i2cPort1;
     else
       WS_DEBUG_PRINTLN("ERROR: Unsupported bus in msgI2CDeviceDeinitRequest message.");
+      return false;
 
     // Empty I2C response to fill out
     msgi2cResponse = wippersnapper_signal_v1_I2CResponse_init_zero;
