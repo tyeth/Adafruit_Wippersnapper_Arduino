@@ -628,16 +628,7 @@ bool cbDecodeSignalRequestI2C(pb_istream_t *stream, const pb_field_t *field,
           "ERROR: Could not decode wippersnapper_i2c_v1_I2CBusScanRequest");
       return false; // fail out if we can't decode the request
     }
-
-    WipperSnapper_Component_I2C *_i2cTmpPort = NULL;
-    if (msgScanReq.i2c_port_number == 0)
-      _i2cTmpPort = WS._i2cPort0;
-    else if (msgScanReq.i2c_port_number == 1)
-      _i2cTmpPort = WS._i2cPort1;
-    else
-      WS_DEBUG_PRINTLN("ERROR: Unsupported bus in msgScanReq message.");
-      return false;
-
+      
     // Empty response message
     wippersnapper_i2c_v1_I2CBusScanResponse scanResp =
         wippersnapper_i2c_v1_I2CBusScanResponse_init_zero;
@@ -645,8 +636,13 @@ bool cbDecodeSignalRequestI2C(pb_istream_t *stream, const pb_field_t *field,
     // Check I2C bus
     if (!initializeI2CBus(msgScanReq.bus_init_request, msgScanReq.i2c_port_number)) {
       WS_DEBUG_PRINTLN("ERROR: Failed to initialize I2C Bus");
-      msgi2cResponse.payload.resp_i2c_scan.bus_response =
-          _i2cTmpPort->getBusStatus();
+      if (msgScanReq.i2c_port_number == 0)
+        msgi2cResponse.payload.resp_i2c_scan.bus_response =
+          WS._i2cPort0->getBusStatus();
+      else if (msgScanReq.i2c_port_number == 1)
+        msgi2cResponse.payload.resp_i2c_scan.bus_response =
+          WS._i2cPort1->getBusStatus();
+
       if (!encodeI2CResponse(&msgi2cResponse)) {
         WS_DEBUG_PRINTLN("ERROR: encoding I2C Response!");
         return false;
@@ -656,7 +652,10 @@ bool cbDecodeSignalRequestI2C(pb_istream_t *stream, const pb_field_t *field,
     }
 
     // Scan I2C bus
-    scanResp = _i2cTmpPort->scanAddresses();
+    if (msgScanReq.i2c_port_number == 0)
+      scanResp = WS._i2cPort0->scanAddresses();
+    else if (msgScanReq.i2c_port_number == 1)
+      scanResp = WS._i2cPort1->scanAddresses();
 
     // Fill I2CResponse
     msgi2cResponse.which_payload =
@@ -706,15 +705,6 @@ bool cbDecodeSignalRequestI2C(pb_istream_t *stream, const pb_field_t *field,
       return false; // fail out if we can't decode
     }
     
-    WipperSnapper_Component_I2C *_i2cTmpPort = NULL;
-    if (msgI2CDeviceInitRequest.i2c_port_number == 0)
-      _i2cTmpPort = WS._i2cPort0;
-    else if (msgI2CDeviceInitRequest.i2c_port_number == 1)
-      _i2cTmpPort = WS._i2cPort1;
-    else
-      WS_DEBUG_PRINTLN("ERROR: Unsupported bus in I2CDeviceInitRequest message.");
-      return false;
-
     // Create empty response
     msgi2cResponse = wippersnapper_signal_v1_I2CResponse_init_zero;
     msgi2cResponse.which_payload =
@@ -723,8 +713,12 @@ bool cbDecodeSignalRequestI2C(pb_istream_t *stream, const pb_field_t *field,
     // Check I2C bus
     if (!initializeI2CBus(msgI2CDeviceInitRequest.i2c_bus_init_req, msgI2CDeviceInitRequest.i2c_port_number)) {
       WS_DEBUG_PRINTLN("ERROR: Failed to initialize I2C Bus");
-      msgi2cResponse.payload.resp_i2c_device_init.bus_response =
-        _i2cTmpPort->getBusStatus();
+      if (msgI2CDeviceInitRequest.i2c_port_number == 0)
+        msgi2cResponse.payload.resp_i2c_device_init.bus_response =
+          WS._i2cPort0->getBusStatus();
+      else if (msgI2CDeviceInitRequest.i2c_port_number == 1)
+        msgi2cResponse.payload.resp_i2c_device_init.bus_response =
+          WS._i2cPort1->getBusStatus();
       if (!encodeI2CResponse(&msgi2cResponse)) {
         WS_DEBUG_PRINTLN("ERROR: encoding I2C Response!");
         return false;
@@ -734,13 +728,20 @@ bool cbDecodeSignalRequestI2C(pb_istream_t *stream, const pb_field_t *field,
     }
 
     // Initialize I2C device
-    _i2cTmpPort->initI2CDevice(&msgI2CDeviceInitRequest);
+    if (msgI2CDeviceInitRequest.i2c_port_number == 0)
+      WS._i2cPort0->initI2CDevice(&msgI2CDeviceInitRequest);
+    else if (msgI2CDeviceInitRequest.i2c_port_number == 1)
+      WS._i2cPort1->initI2CDevice(&msgI2CDeviceInitRequest);
 
     // Fill device's address and bus status
     msgi2cResponse.payload.resp_i2c_device_init.i2c_device_address =
         msgI2CDeviceInitRequest.i2c_device_address;
-    msgi2cResponse.payload.resp_i2c_device_init.bus_response =
-        _i2cTmpPort->getBusStatus();
+    if (msgI2CDeviceInitRequest.i2c_port_number == 0)
+      msgi2cResponse.payload.resp_i2c_device_init.bus_response =
+          WS._i2cPort0->getBusStatus();
+    else if (msgI2CDeviceInitRequest.i2c_port_number == 1)
+      msgi2cResponse.payload.resp_i2c_device_init.bus_response =
+          WS._i2cPort1->getBusStatus();
 
     // Encode response
     if (!encodeI2CResponse(&msgi2cResponse)) {
@@ -762,29 +763,26 @@ bool cbDecodeSignalRequestI2C(pb_istream_t *stream, const pb_field_t *field,
       return false; // fail out if we can't decode
     }
 
-    // Define convienience bus for manipulation
-    WipperSnapper_Component_I2C *_i2cTmpPort = NULL;
-    if (msgI2CDeviceUpdateRequest.i2c_port_number == 0)
-      _i2cTmpPort = WS._i2cPort0;
-    else if (msgI2CDeviceUpdateRequest.i2c_port_number == 1)
-      _i2cTmpPort = WS._i2cPort1;
-    else
-      WS_DEBUG_PRINTLN("ERROR: Unsupported bus in msgI2CDeviceUpdateRequest message.");
-      return false;
-
     // Empty I2C response to fill out
     msgi2cResponse = wippersnapper_signal_v1_I2CResponse_init_zero;
     msgi2cResponse.which_payload =
         wippersnapper_signal_v1_I2CResponse_resp_i2c_device_update_tag;
 
     // Update I2C device's properties
-    _i2cTmpPort->updateI2CDeviceProperties(&msgI2CDeviceUpdateRequest);
+    if (msgI2CDeviceUpdateRequest.i2c_port_number == 0)
+      WS._i2cPort0->updateI2CDeviceProperties(&msgI2CDeviceUpdateRequest);
+    else if (msgI2CDeviceUpdateRequest.i2c_port_number == 1)
+      WS._i2cPort1->updateI2CDeviceProperties(&msgI2CDeviceUpdateRequest);
 
     // Fill address
     msgi2cResponse.payload.resp_i2c_device_update.i2c_device_address =
         msgI2CDeviceUpdateRequest.i2c_device_address;
-    msgi2cResponse.payload.resp_i2c_device_update.bus_response =
-        _i2cTmpPort->getBusStatus();
+    if (msgI2CDeviceUpdateRequest.i2c_port_number == 0)
+      msgi2cResponse.payload.resp_i2c_device_update.bus_response =
+        WS._i2cPort0->getBusStatus();
+    else if (msgI2CDeviceUpdateRequest.i2c_port_number == 1)
+      msgi2cResponse.payload.resp_i2c_device_update.bus_response =
+        WS._i2cPort1->getBusStatus();
 
     // Encode response
     if (!encodeI2CResponse(&msgi2cResponse)) {
@@ -804,28 +802,26 @@ bool cbDecodeSignalRequestI2C(pb_istream_t *stream, const pb_field_t *field,
       return false; // fail out if we can't decode
     }
 
-    // Define convienience bus for manipulation
-    WipperSnapper_Component_I2C *_i2cTmpPort = NULL;
-    if (msgI2CDeviceDeinitRequest.i2c_port_number == 0)
-      _i2cTmpPort = WS._i2cPort0;
-    else if (msgI2CDeviceDeinitRequest.i2c_port_number == 1)
-      _i2cTmpPort = WS._i2cPort1;
-    else
-      WS_DEBUG_PRINTLN("ERROR: Unsupported bus in msgI2CDeviceDeinitRequest message.");
-      return false;
-
     // Empty I2C response to fill out
     msgi2cResponse = wippersnapper_signal_v1_I2CResponse_init_zero;
     msgi2cResponse.which_payload =
         wippersnapper_signal_v1_I2CResponse_resp_i2c_device_deinit_tag;
 
     // Deinitialize I2C device
-    _i2cTmpPort->deinitI2CDevice(&msgI2CDeviceDeinitRequest);
+    if (msgI2CDeviceDeinitRequest.i2c_port_number == 0)
+      WS._i2cPort0->deinitI2CDevice(&msgI2CDeviceDeinitRequest);
+    else if (msgI2CDeviceDeinitRequest.i2c_port_number == 1)
+      WS._i2cPort1->deinitI2CDevice(&msgI2CDeviceDeinitRequest);
+    
     // Fill deinit response
     msgi2cResponse.payload.resp_i2c_device_deinit.i2c_device_address =
         msgI2CDeviceDeinitRequest.i2c_device_address;
-    msgi2cResponse.payload.resp_i2c_device_deinit.bus_response =
-        _i2cTmpPort->getBusStatus();
+    if (msgI2CDeviceDeinitRequest.i2c_port_number == 0)
+      msgi2cResponse.payload.resp_i2c_device_deinit.bus_response =
+        WS._i2cPort0->getBusStatus();
+    else if (msgI2CDeviceDeinitRequest.i2c_port_number == 1)
+      msgi2cResponse.payload.resp_i2c_device_deinit.bus_response =
+        WS._i2cPort1->getBusStatus();
 
     // Encode response
     if (!encodeI2CResponse(&msgi2cResponse)) {
