@@ -1,14 +1,21 @@
-import os
+# import os
 
-Import("env")
+# Import("env")
 
-adafruit_usb_config = os.path.join(
-    env.subst("$PROJECT_LIBDEPS_DIR"),
-    env.subst("$PIOENV"),
-    "Adafruit TinyUSB Library",
-    "src",
-    "tusb_config.h",
-)
+# print("** RENAME_USB_CONFIG.PY run")
 
-if os.path.isfile(adafruit_usb_config):
-    os.rename(adafruit_usb_config, adafruit_usb_config + "_backup")
+# adafruit_usb_config = os.path.join(
+#     env.subst("$PROJECT_LIBDEPS_DIR"),
+#     env.subst("$PIOENV"),
+#     "Adafruit TinyUSB Library",
+#     "src",
+#     "tusb_config.h",
+# )
+
+# print("Test before rename passes: (",adafruit_usb_config,")")
+# print(os.path.isfile(adafruit_usb_config))
+
+# if os.path.isfile(adafruit_usb_config):
+#     os.rename(adafruit_usb_config, adafruit_usb_config + "_backup")
+
+# print("** EOF **")
