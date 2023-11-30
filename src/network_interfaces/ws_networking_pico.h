@@ -262,9 +262,16 @@ protected:
     } else {
       _disconnect();
       delay(100);
+      feedWDT();
+      WiFi.setTimeout(20000);
       WiFi.begin(_ssid, _pass);
       _status = WS_NET_DISCONNECTED;
-      delay(5000);
+      uint8_t timeout = 0;
+      while (WiFi.status() != WL_CONNECTED && timeout < 20) {
+        timeout++;
+        feedWDT();
+        delay(100);
+      }
     }
   }
 

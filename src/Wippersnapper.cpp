@@ -2385,7 +2385,7 @@ void Wippersnapper::runNetFSM() {
         statusLEDBlink(WS_LED_STATUS_WIFI_CONNECTING);
         WS.feedWDT();
         // attempt to connect
-        WS_DEBUG_PRINTLN("Attempting to connect to WiFi...");
+        WS_DEBUG_PRINTLN("Attempting to connect to your WiFi...");
         _connect();
         WS.feedWDT();
         // blink to simulate a delay to allow wifi connection to process
