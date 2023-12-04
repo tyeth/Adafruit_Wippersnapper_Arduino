@@ -256,22 +256,58 @@ protected:
 
     if (WiFi.status() == WL_CONNECTED)
       return;
-
+    WS_DEBUG_PRINTLN("Status");
+    WS_DEBUG_PRINTLN(WiFi.status());
     if (strlen(_ssid) == 0) {
       _status = WS_SSID_INVALID;
     } else {
+      WS_DEBUG_PRINTLN("Disconnecting...");
+      WS_PRINTER.flush();
       _disconnect();
-      delay(100);
-      feedWDT();
-      WiFi.setTimeout(20000);
-      WiFi.begin(_ssid, _pass);
+      WS_DEBUG_PRINTLN("Delaying 5s...");
+      WS_PRINTER.flush();
+      WS.feedWDT();
+      delay(5000);
+      WS.feedWDT();
       _status = WS_NET_DISCONNECTED;
+      WS_DEBUG_PRINTLN("Setting mode: STA");
+      WS_PRINTER.flush();
+      WiFi.mode(WIFI_STA);
+      WS_DEBUG_PRINTLN("Setting timeout");
+      WS_PRINTER.flush();
+      WiFi.setTimeout(20000);
+      WS_DEBUG_PRINTLN("Starting connection attempt...");
+      WS_PRINTER.flush();
+      WiFi.begin(_ssid, _pass);
       uint8_t timeout = 0;
-      while (WiFi.status() != WL_CONNECTED && timeout < 20) {
+      while (WiFi.status() == WL_DISCONNECTED && timeout < 20) {
         timeout++;
-        feedWDT();
-        delay(100);
+        WS_DEBUG_PRINTLN("Status: ");
+        WS_DEBUG_PRINTLN(WiFi.status());
+        WS_PRINTER.flush();
+        WS.feedWDT();
+        unsigned long m = millis();
+        while (millis() - m < 1000) {
+          yield();
+          WS.feedWDT();
+        }
       }
+      WS_DEBUG_PRINTLN("Timeout: ");
+      WS_DEBUG_PRINTLN(timeout);
+      WS_DEBUG_PRINTLN("Status: ");
+      WS_DEBUG_PRINTLN(WiFi.status());
+      WS_PRINTER.flush();
+      if (WiFi.status() == WL_CONNECTED) {
+        WS_DEBUG_PRINTLN("Connected!");
+        WS_PRINTER.flush();
+        _status = WS_NET_CONNECTED;
+      } else {
+        WS_DEBUG_PRINTLN("Connection failed!");
+        WS_PRINTER.flush();
+        _status = WS_NET_CONNECT_FAILED;
+      }
+      WS_DEBUG_PRINTLN("Status updated!");
+      WS_PRINTER.flush();
     }
   }
 
