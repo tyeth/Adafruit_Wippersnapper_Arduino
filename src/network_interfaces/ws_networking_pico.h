@@ -303,9 +303,12 @@ protected:
       uint8_t status = WiFi.status();
       WS_DEBUG_PRINTLN(status);
       WS_PRINTER.flush();
-      if(status == WL_CONNECTED){
+      if(status == WL_CONNECTED){  // breakpoint for debugging
         WS_DEBUG_PRINTLN("Connected! Checking status again to see if crash triggered...");
-        WS_PRINTER.flush(); // breakpoint for debugging
+        WS_PRINTER.flush();
+      } else {
+        WS_DEBUG_PRINTLN("Not connected! Checking status again to see if crash triggered...");
+        WS_PRINTER.flush();
       }
       if (WiFi.status() == WL_CONNECTED) {
         WS_DEBUG_PRINTLN("Connected!");
