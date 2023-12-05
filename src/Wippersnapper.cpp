@@ -2351,7 +2351,7 @@ void Wippersnapper::runNetFSM() {
       break;
     case FSM_NET_CHECK_NETWORK:
       if (networkStatus() == WS_NET_CONNECTED) {
-        WS_DEBUG_PRINTLN("Connected to WiFi!");
+        WS_DEBUG_PRINTLN("runNetFSM: Connected to WiFi!");
 #ifdef USE_DISPLAY
         if (WS._ui_helper->getLoadingState())
           WS._ui_helper->set_load_bar_icon_complete(loadBarIconWifi);
@@ -2362,7 +2362,7 @@ void Wippersnapper::runNetFSM() {
       fsmNetwork = FSM_NET_ESTABLISH_NETWORK;
       break;
     case FSM_NET_ESTABLISH_NETWORK:
-      WS_DEBUG_PRINTLN("Connecting to WiFi...");
+      WS_DEBUG_PRINTLN("runNetFSM: Connecting to WiFi...");
 #ifdef USE_DISPLAY
       if (WS._ui_helper->getLoadingState())
         WS._ui_helper->set_label_status("Connecting to WiFi...");
@@ -2385,7 +2385,7 @@ void Wippersnapper::runNetFSM() {
         statusLEDBlink(WS_LED_STATUS_WIFI_CONNECTING);
         WS.feedWDT();
         // attempt to connect
-        WS_DEBUG_PRINTLN("Attempting to connect to your WiFi...");
+        WS_DEBUG_PRINTLN("runNetFSM: Attempting to connect to your WiFi...");
         _connect();
         WS.feedWDT();
         // blink to simulate a delay to allow wifi connection to process
@@ -2395,6 +2395,7 @@ void Wippersnapper::runNetFSM() {
           break;
         maxAttempts--;
       }
+      WS_DEBUG_PRINTLN("runNetFSM: Connection routine finished!");
 
       // Validate connection
       if (networkStatus() != WS_NET_CONNECTED) {
@@ -2412,7 +2413,8 @@ void Wippersnapper::runNetFSM() {
       fsmNetwork = FSM_NET_CHECK_NETWORK;
       break;
     case FSM_NET_ESTABLISH_MQTT:
-      WS_DEBUG_PRINTLN("Attempting to connect to IO...");
+      WS_DEBUG_PRINTLN("runNetFSM: Attempting to connect to IO...");
+      WS_PRINTER.flush();
 #ifdef USE_DISPLAY
       if (WS._ui_helper->getLoadingState())
         WS._ui_helper->set_label_status("Connecting to IO...");
@@ -2421,6 +2423,7 @@ void Wippersnapper::runNetFSM() {
       // Attempt to connect
       maxAttempts = 5;
       while (maxAttempts > 0) {
+        feedWDT();
         statusLEDBlink(WS_LED_STATUS_MQTT_CONNECTING);
         int8_t mqttRC = WS._mqtt->connect();
         if (mqttRC == WS_MQTT_CONNECTED) {
