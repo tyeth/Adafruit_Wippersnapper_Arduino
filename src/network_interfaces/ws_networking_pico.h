@@ -295,8 +295,13 @@ protected:
       WS_DEBUG_PRINTLN("Timeout: ");
       WS_DEBUG_PRINTLN(timeout);
       WS_DEBUG_PRINTLN("Status: ");
-      WS_DEBUG_PRINTLN(WiFi.status());
+      uint8_t status = WiFi.status();
+      WS_DEBUG_PRINTLN(status);
       WS_PRINTER.flush();
+      if(status == WL_CONNECTED){
+        WS_DEBUG_PRINTLN("Connected! Checking status again to see if crash triggered...");
+        WS_PRINTER.flush(); // breakpoint for debugging
+      }
       if (WiFi.status() == WL_CONNECTED) {
         WS_DEBUG_PRINTLN("Connected!");
         WS_PRINTER.flush();
