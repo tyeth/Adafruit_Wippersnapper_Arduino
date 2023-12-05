@@ -288,6 +288,11 @@ protected:
         WS.feedWDT();
         unsigned long m = millis();
         while (millis() - m < 1000) {
+          if(millis() < m) {
+              // millis wrapped around to zero. Rare to hit this
+              // issue, but it will do this every 49 days.
+              m = millis();
+          }
           yield();
           WS.feedWDT();
         }
