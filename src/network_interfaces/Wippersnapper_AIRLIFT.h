@@ -24,7 +24,8 @@
 #include "Adafruit_MQTT_Client.h"
 #include "Arduino.h"
 #include "SPI.h"
-#include "WiFiNINA.h"
+// #include "WiFiNINA.h"
+#include "WiFi101.h"
 #include "Wippersnapper.h"
 
 #define NINAFWVER                                                              \
@@ -57,7 +58,7 @@ public:
     _mqtt_client = new WiFiSSLClient;
 
     // setup ESP32 co-processor pins during init.
-    WiFi.setPins(_ssPin, _ackPin, _rstPin, _gpio0Pin, _wifi);
+    WiFi.setPins(_ssPin, _ackPin, _rstPin, _gpio0Pin);
   }
 
   /**************************************************************************/
@@ -257,7 +258,7 @@ protected:
     } else {
 
       // validate co-processor is physically connected connection
-      if (WiFi.status() == WL_NO_MODULE) {
+      if (WiFi.status() == WL_NO_SHIELD) {
         WS_DEBUG_PRINT("No ESP32 module detected!");
         return;
       }
