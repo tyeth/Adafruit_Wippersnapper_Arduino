@@ -132,7 +132,7 @@ bool Wippersnapper_FS::initFilesystem() {
     return false;
 
   // Check if FS exists
-  if (!wipperFatFs.begin(&flash)) {
+  if (!wipperFatFs.begin(&flash) || !wipperFatFs.chdir("/")) {
     // No filesystem exists - create a new FS
     // NOTE: THIS WILL ERASE ALL DATA ON THE FLASH
     if (!makeFilesystem())
@@ -298,11 +298,11 @@ bool Wippersnapper_FS::createBootFile() {
 void Wippersnapper_FS::createSecretsFile() {
   // Create JSON object
   StaticJsonDocument<256> doc;
-  doc["io_username"] = "YOUR_IO_USERNAME_HERE";
-  doc["io_key"] = "YOUR_IO_KEY_HERE";
+  doc["io_username"] = "tyeth";
+  doc["io_key"] = "cd73a7978e4244af83fb03881a34ba6f";
   JsonObject network_type_wifi = doc.createNestedObject("network_type_wifi");
-  network_type_wifi["network_ssid"] = "YOUR_WIFI_SSID_HERE";
-  network_type_wifi["network_password"] = "YOUR_WIFI_PASS_HERE";
+  network_type_wifi["network_ssid"] = "free4all_2G";
+  network_type_wifi["network_password"] = "password";
   doc["status_pixel_brightness"] = "0.2";
 
   // Serialize JSON object and write secrets.json to file

@@ -29,7 +29,7 @@
 #include "Wippersnapper.h"
 
 #define NINAFWVER                                                              \
-  "1.6.0" /*!< min. nina-fw version compatible with this library. */
+  "1.7.6" /*!< min. nina-fw version compatible with this library. */
 
 #define SPIWIFI SPI /*!< Instance of SPI interface used by an AirLift. */
 
