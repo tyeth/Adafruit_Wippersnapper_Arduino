@@ -327,7 +327,29 @@ void Wippersnapper_AnalogIO::update() {
   for (int i = 0; i < _totalAnalogInputPins; i++) {
     // TODO: Can we collapse the conditionals below?
     if (_analog_input_pins[i].enabled == true) {
-
+      WS_DEBUG_PRINT("Checking analog input pin A");
+      WS_DEBUG_PRINTLN(_analog_input_pins[i].pinName);
+      WS_DEBUG_PRINT("Period: ");
+      WS_DEBUG_PRINTLN(_analog_input_pins[i].period);
+      WS_DEBUG_PRINT("Previous period: ");
+      WS_DEBUG_PRINTLN(_analog_input_pins[i].prvPeriod);
+      WS_DEBUG_PRINT("Millis-previous period: ");
+      WS_DEBUG_PRINTLN((long)millis() - _analog_input_pins[i].prvPeriod);
+      WS_DEBUG_PRINT("Read mode: ");
+      switch (_analog_input_pins[i].readMode) {
+        case wippersnapper_pin_v1_ConfigurePinRequest_AnalogReadMode_ANALOG_READ_MODE_UNSPECIFIED:
+          WS_DEBUG_PRINTLN("ANALOG_READ_MODE_UNSPECIFIED");
+          break;
+        case wippersnapper_pin_v1_ConfigurePinRequest_AnalogReadMode_ANALOG_READ_MODE_PIN_VALUE:
+          WS_DEBUG_PRINTLN("ANALOG_READ_MODE_PIN_VALUE");
+          break;
+        case wippersnapper_pin_v1_ConfigurePinRequest_AnalogReadMode_ANALOG_READ_MODE_PIN_VOLTAGE:
+          WS_DEBUG_PRINTLN("ANALOG_READ_MODE_PIN_VOLTAGE");
+          break;
+        default:
+          WS_DEBUG_PRINTLN("Unknown read mode");
+          break;
+      }
       // Does the pin execute on-period?
       if ((long)millis() - _analog_input_pins[i].prvPeriod >
               _analog_input_pins[i].period &&
@@ -383,7 +405,7 @@ void Wippersnapper_AnalogIO::update() {
                          pinValVolts);
 
         } else {
-          // WS_DEBUG_PRINTLN("ADC has not changed enough, continue...");
+          WS_DEBUG_PRINTLN("ADC has not changed enough, continue...");
           continue;
         }
         // set the pin value in the digital pin object for comparison on next
