@@ -27,7 +27,8 @@
     defined(ARDUINO_ARCH_RP2040) ||                                            \
     defined(ARDUINO_ADAFRUIT_FEATHER_ESP32S3_REVTFT) ||                        \
     defined(ARDUINO_ADAFRUIT_FEATHER_ESP32S2_REVTFT) ||                        \
-    defined(ARDUINO_ADAFRUIT_QTPY_ESP32S3_N4R2)
+    defined(ARDUINO_ADAFRUIT_QTPY_ESP32S3_N4R2) ||                             \
+    defined(ARDUINO_ESPRESSIF_ESP32S3_DEVKITC_1_N8)
 #include "Wippersnapper_FS.h"
 #include "print_dependencies.h"
 // On-board external flash (QSPI or SPI) macros should already
