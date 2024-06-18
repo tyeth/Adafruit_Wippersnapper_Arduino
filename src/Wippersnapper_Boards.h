@@ -93,7 +93,11 @@
 #define USE_TINYUSB
 #define USE_STATUS_NEOPIXEL
 #define STATUS_NEOPIXEL_PIN PIN_NEOPIXEL
+#ifndef NEOPIXEL_NUM
+#define STATUS_NEOPIXEL_NUM 1
+#else
 #define STATUS_NEOPIXEL_NUM NEOPIXEL_NUM
+#endif
 #elif defined(ARDUINO_ADAFRUIT_FEATHER_ESP32S3)
 #define BOARD_ID "feather-esp32s3-4mbflash-2mbpsram"
 #define USE_TINYUSB
