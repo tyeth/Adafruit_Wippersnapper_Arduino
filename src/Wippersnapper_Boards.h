@@ -87,7 +87,8 @@
 #define STATUS_NEOPIXEL_PIN PIN_NEOPIXEL
 #define STATUS_NEOPIXEL_NUM NEOPIXEL_NUM
 #define USE_PSRAM ///< Board has PSRAM, use it for dynamic memory allocation
-#elif defined(ARDUINO_ADAFRUIT_FEATHER_ESP32S3_NOPSRAM)
+#elif defined(ARDUINO_ADAFRUIT_FEATHER_ESP32S3_NOPSRAM) ||                     \
+    defined(ARDUINO_ESPRESSIF_ESP32S3_DEVKITC_1_N8)
 #define BOARD_ID "feather-esp32s3"
 #define USE_TINYUSB
 #define USE_STATUS_NEOPIXEL
