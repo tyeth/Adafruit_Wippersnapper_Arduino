@@ -281,6 +281,7 @@ bool Wippersnapper_AnalogIO::encodePinEvent(
 #ifdef USE_DISPLAY
   WS._ui_helper->add_text_to_terminal(buffer);
 #endif
+  WS_DEBUG_PRINTLN(buffer);
 
   // Encode signal message
   pb_ostream_t stream =
@@ -296,9 +297,9 @@ bool Wippersnapper_AnalogIO::encodePinEvent(
   pb_get_encoded_size(&msgSz,
                       wippersnapper_signal_v1_CreateSignalRequest_fields,
                       &outgoingSignalMsg);
-  WS_DEBUG_PRINT("Publishing pinEvent...");
+  WS_DEBUG_PRINTLN("Publishing pinEvent...");
   WS.publish(WS._topic_signal_device, WS._buffer_outgoing, msgSz, 1);
-  WS_DEBUG_PRINTLN("Published!");
+  WS_DEBUG_PRINTLN("Pin Event Published!");
 
   return true;
 }
