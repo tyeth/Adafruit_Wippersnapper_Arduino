@@ -22,6 +22,12 @@
 #define USE_STATUS_NEOPIXEL
 #define STATUS_NEOPIXEL_PIN 2
 #define STATUS_NEOPIXEL_NUM 1
+#elif defined(ADAFRUIT_PYPORTAL_M4_TITANO)
+#define BOARD_ID "pyportal-titano-tinyusb"
+#define USE_TINYUSB
+#define USE_STATUS_NEOPIXEL
+#define STATUS_NEOPIXEL_PIN 2
+#define STATUS_NEOPIXEL_NUM 1
 #elif defined(ADAFRUIT_METRO_M4_AIRLIFT_LITE)
 #define BOARD_ID "metro-m4-airliftlite-tinyusb"
 #define USE_TINYUSB
@@ -132,11 +138,24 @@
 #define USE_LITTLEFS
 #define USE_STATUS_LED
 #define STATUS_LED_PIN 0
+#elif defined(ARDUINO_ADAFRUIT_ITSYBITSY_ESP32)
+#define BOARD_ID "itsybitsy-esp32"
+#define USE_LITTLEFS
+#define USE_STATUS_NEOPIXEL
+#define STATUS_NEOPIXEL_PIN PIN_NEOPIXEL
+#define STATUS_NEOPIXEL_NUM 1
+#define USE_PSRAM ///< Board has PSRAM, use it for dynamic memory allocation
 #elif defined(ARDUINO_FEATHER_ESP32)
 #define BOARD_ID "feather-esp32"
 #define USE_LITTLEFS
 #define USE_STATUS_LED
 #define STATUS_LED_PIN 13
+#elif defined(ARDUINO_ADAFRUIT_FEATHER_ESP32C6)
+#define BOARD_ID "feather-esp32c6"
+#define USE_LITTLEFS
+#define USE_STATUS_NEOPIXEL
+#define STATUS_NEOPIXEL_PIN PIN_NEOPIXEL
+#define STATUS_NEOPIXEL_NUM 1
 #elif defined(ARDUINO_ADAFRUIT_FEATHER_ESP32_V2)
 #define BOARD_ID "feather-esp32-v2"
 #define USE_LITTLEFS
