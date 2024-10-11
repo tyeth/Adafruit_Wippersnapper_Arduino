@@ -105,7 +105,7 @@ Wippersnapper_FS::Wippersnapper_FS() {
 
   // If a filesystem does not already exist - attempt to initialize a new
   // filesystem
-  if (!initFilesystem() && !initFilesystem(true)) {
+  if (!initFilesystem()){ //} && !initFilesystem(true)) {
     setStatusLEDColor(RED);
     fsHalt("ERROR Initializing Filesystem");
   }
@@ -115,7 +115,7 @@ Wippersnapper_FS::Wippersnapper_FS() {
 
   // If we created a new filesystem, halt until user RESETs device.
   if (_freshFS)
-    fsHalt("New filesystem created! Press the reset button on your board.");
+    fsHalt("New filesystem created! Press the reset button on your board."); // TODO: just reset here after printing message then a delay/countdown.
 }
 
 /************************************************************/
@@ -159,13 +159,16 @@ bool Wippersnapper_FS::initFilesystem(bool force_format) {
   if (!wipperFatFs.begin(&flash))
     return false;
 
+  //TODO: Don't do this unless we need the space and createSecrets fails
   // If CircuitPython was previously installed - erase CPY FS
   eraseCPFS();
 
+  //TODO: don't do this every time, only if content differs?
   // If WipperSnapper was previously installed - remove the
   // wippersnapper_boot_out.txt file
   eraseBootFile();
 
+  //TODO: don't do this every time, only if missing (less power usage? less block wear)
   // No file indexing on macOS
   if (!wipperFatFs.exists("/.fseventsd/no_log"))
   {
