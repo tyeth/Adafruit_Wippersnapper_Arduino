@@ -167,21 +167,29 @@ bool Wippersnapper_FS::initFilesystem(bool force_format) {
   eraseBootFile();
 
   // No file indexing on macOS
-  wipperFatFs.mkdir("/.fseventsd/");
-  File32 writeFile = wipperFatFs.open("/.fseventsd/no_log", FILE_WRITE);
-  if (!writeFile)
-    return false;
-  writeFile.close();
+  if (!wipperFatFs.exists("/.fseventsd/no_log"))
+  {
+    wipperFatFs.mkdir("/.fseventsd/");
+    File32 writeFile = wipperFatFs.open("/.fseventsd/no_log", FILE_WRITE);
+    if (!writeFile)
+      return false;
+    writeFile.close();
+  }
 
-  writeFile = wipperFatFs.open("/.metadata_never_index", FILE_WRITE);
-  if (!writeFile)
-    return false;
-  writeFile.close();
-
-  writeFile = wipperFatFs.open("/.Trashes", FILE_WRITE);
-  if (!writeFile)
-    return false;
-  writeFile.close();
+  if (!wipperFatFs.exists("/.metadata_never_index"))
+  {
+    File32 writeFile = wipperFatFs.open("/.metadata_never_index", FILE_WRITE);
+    if (!writeFile)
+      return false;
+    writeFile.close();
+  }
+  if (!wipperFatFs.exists("/.Trashes"))
+  {
+    File32 writeFile = wipperFatFs.open("/.Trashes", FILE_WRITE);
+    if (!writeFile)
+      return false;
+    writeFile.close();
+  }
 
   // Create wippersnapper_boot_out.txt file
   if (!createBootFile())
