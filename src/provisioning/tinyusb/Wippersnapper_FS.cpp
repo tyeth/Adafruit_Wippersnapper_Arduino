@@ -159,14 +159,14 @@ bool Wippersnapper_FS::initFilesystem(bool force_format) {
   if (!wipperFatFs.begin(&flash))
     return false;
 
+if (false) {
+
   //TODO: Don't do this unless we need the space and createSecrets fails
   // If CircuitPython was previously installed - erase CPY FS
   eraseCPFS();
+  // Also, should probably relabel drive to WIPPER if CIRCUITPY was there
+}
 
-  //TODO: don't do this every time, only if content differs?
-  // If WipperSnapper was previously installed - remove the
-  // wippersnapper_boot_out.txt file
-  eraseBootFile();
 
   //TODO: don't do this every time, only if missing (less power usage? less block wear)
   // No file indexing on macOS
@@ -313,9 +313,20 @@ bool Wippersnapper_FS::createBootFile() {
 
     // Compare existing content with new content
     if (existingContent == newContent) {
+      WS_DEBUG_PRINTLN("INFO: wipper_boot_out.txt already exists with the "
+                        "same content.");
       return true; // No need to overwrite
+    } else {
+      WS_DEBUG_PRINTLN("INFO: wipper_boot_out.txt exists but with different "
+                        "content. Overwriting...");
     }
+  } else {
+    WS_DEBUG_PRINTLN("INFO: could not open wipper_boot_out.txt for reading. "
+                     "Creating new file...");
   }
+
+  // We probably don't need to erase first!
+  eraseBootFile();
 
   // Overwrite the file with new content
   bootFile = wipperFatFs.open("/wipper_boot_out.txt", FILE_WRITE);
@@ -324,6 +335,8 @@ bool Wippersnapper_FS::createBootFile() {
     bootFile.flush();
     bootFile.close();
     is_success = true;
+  } else {
+    WS_DEBUG_PRINTLN("ERROR: Unable to open wipper_boot_out.txt for writing!");
   }
 
   return is_success;
