@@ -7,6 +7,9 @@ retest first secrets.json acces on a new device on tinyUF2 0.18.2 and WS 88, ver
 
 Cleanup eraseCPFS and retest with full file system and no secrets + different bootlog contents. also move write bootlog after secrets processing if not already
 
+Add boot reason detection for brownouts, if so and corrupt secrets/FS then fsHalt with appropriate message for 30s then reboot
+
+
 then add the metro-s3
 Update step images in ws_boards for metro-s3
 
