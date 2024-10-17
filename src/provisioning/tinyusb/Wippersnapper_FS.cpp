@@ -159,12 +159,13 @@ bool Wippersnapper_FS::initFilesystem(bool force_format) {
   if (!wipperFatFs.begin(&flash))
     return false;
 
-if (false) {
+if (false) { //TODO: reinstate after discussion over utility. Restest a full fs.
 
   //TODO: Don't do this unless we need the space and createSecrets fails
   // If CircuitPython was previously installed - erase CPY FS
   eraseCPFS();
   // Also, should probably relabel drive to WIPPER if CIRCUITPY was there
+  // using setVolumeLabel(), but note the FS must be unmounted first
 }
 
 
