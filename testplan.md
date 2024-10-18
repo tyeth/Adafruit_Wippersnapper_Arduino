@@ -7,7 +7,8 @@ retest first secrets.json acces on a new device on tinyUF2 0.18.2 and WS 88, ver
 
 Cleanup eraseCPFS and retest with full file system and no secrets + different bootlog contents. also move write bootlog after secrets processing if not already
 
-Add boot reason detection for brownouts, if so and corrupt secrets/FS then fsHalt with appropriate message for 30s then reboot
+Add boot reason detection for brownouts, if so and corrupt secrets/FS then fsHalt with appropriate message for 30s then reboot.
+ Bad USB cables on first boot should be accounted for - brownout serial message / fsHalt
 
 As part of boot protection add message when write or erase attempt and suggest user manually perform action.
  Secondly consider moving all serial debug output to after usb reattach so user sees it, or at least repeat?
