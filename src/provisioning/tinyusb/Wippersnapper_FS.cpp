@@ -61,6 +61,35 @@ Adafruit_USBD_MSC usb_msc; /*!< USB mass storage object */
 FATFS elmchamFatfs;    ///< Elm Cham's fatfs object
 uint8_t workbuf[4096]; ///< Working buffer for f_fdisk function.
 
+#ifdef ARDUINO_ARCH_ESP32
+#define DETACHED_PRINT_BUFFER_SIZE 4096
+#else
+#define DETACHED_PRINT_BUFFER_SIZE 2048 // Not sure we have much RAM on M4 etc.
+#endif
+
+char *detached_usb_print_buffer[DETACHED_PRINT_BUFFER_SIZE] = {0}; ///< Buffer for USB detached print
+uint16_t detached_usb_print_buffer_len = 0; ///< Length of USB detached print
+
+void WS_DEBUG_PRINTLN_USB_DETACHED(const char *msg) {
+  // Print to buffer
+  if (detached_usb_print_buffer_len + strlen(msg) >= DETACHED_PRINT_BUFFER_SIZE) {
+    // shunt buffer
+    memset(detached_usb_print_buffer, 0, DETACHED_PRINT_BUFFER_SIZE);
+    strcat(*detached_usb_print_buffer, "USB Print buffer overflow\n");
+    detached_usb_print_buffer_len = 26;
+  }
+  strcat(*detached_usb_print_buffer, msg);
+  detached_usb_print_buffer_len += strlen(msg);
+}
+
+void WS_DEBUG_USB_REATTACHED_SO_PRINT_BUFFER() {
+  if (detached_usb_print_buffer_len > 0) {
+    WS_DEBUG_PRINTLN(*detached_usb_print_buffer);
+    memset(detached_usb_print_buffer, 0, DETACHED_PRINT_BUFFER_SIZE);
+    detached_usb_print_buffer_len = 0;
+  }
+}
+
 bool makeFilesystem() {
   FRESULT r = f_mkfs("", FM_FAT | FM_SFD, 0, workbuf, sizeof(workbuf));
   if (r != FR_OK) {
@@ -135,9 +164,25 @@ Wippersnapper_FS::~Wippersnapper_FS() {}
 */
 /**************************************************************************/
 bool Wippersnapper_FS::initFilesystem(bool force_format) {
+  if (WS.brownOutCausedReset) {
+    // If brownout caused reset, we need to be very careful with flash writes
+    // as the flash may be in a bad state, or not tolerate erasing blocks.
+    // We should not format the filesystem in this case, nor erase files,
+    // but we can try writing a file if it is corrupt and we require it 
+    // like secrets/display_config, where as bootlog is not critical.
+    // We may also want to buffer some logging / warnings about files
+    // that are corrupt or not accessible. In the future we want a cry for help
+    // to a generic error feed. This would aid in recharging/debugging/support.
+    // We could clone the secrets in nvm, but with limited writes I prefer not to.
+    // Either way start using WS_DEBUG_PRINTLN_USB_DETACHED instead of printLn
+    WS_DEBUG_PRINTLN_USB_DETACHED("Brownout reset detected, filesystem may be in a bad state.");
+  }
+
   // Init. flash library
-  if (!flash.begin())
+  if (!flash.begin()){
+    WS_DEBUG_PRINTLN_USB_DETACHED("Flash begin failed.");
     return false;
+  }
 
   // Check if FS exists
   if (force_format || !wipperFatFs.begin(&flash)) {
@@ -195,12 +240,16 @@ bool Wippersnapper_FS::initFilesystem(bool force_format) {
   if (!createBootFile() && !WS.brownOutCausedReset)
     return false;
 
-  // Check if secrets.json file already exists
+  //TODO: Check if secrets.json file already exists and is not full of nulls
   if (!configFileExists()) {
     // Create new secrets.json file and halt
     createSecretsFile();
   }
 
+  //TODO: does the first time secrets doesn't accept write have anything to
+  // do with not syncing all data to flash, along with WipperFS.cacheClear
+  // flash.syncBlocks();
+  // wipperFatFs.cacheClear();
   return true;
 }
 
@@ -253,10 +302,17 @@ void Wippersnapper_FS::eraseCPFS() {
     return; // Can't serial print here, in next PR check we're not out of space
   }
   if (wipperFatFs.exists("/boot_out.txt")) {
+    WS_DEBUG_PRINTLN_USB_DETACHED("CircuitPython Boot file exists, removing, along with code.py and lib folder...");
+    if (WS.brownOutCausedReset){
+      WS_DEBUG_PRINTLN_USB_DETACHED("Not erasing CircuitPython files due to previous brownout reset.");
+      return;
+    }
     wipperFatFs.remove("/boot_out.txt");
     wipperFatFs.remove("/code.py");
     File32 libDir = wipperFatFs.open("/lib");
     libDir.rmRfStar();
+  } else {
+    WS_DEBUG_PRINTLN_USB_DETACHED("CircuitPython Boot file does not exist, no need to do anything.");
   }
 }
 
@@ -326,6 +382,8 @@ bool Wippersnapper_FS::createBootFile() {
   }
 
   if (WS.brownOutCausedReset){
+    //TODO: verify tinyUSBdevice attached
+    WS_DEBUG_PRINTLN_USB_DETACHED("Not writing NEW wipper_boot_out.txt contents due to brownout reset.");
     return false;
   }
 
@@ -394,7 +452,21 @@ void Wippersnapper_FS::parseSecrets() {
   // Attempt to open the secrets.json file for reading
   File32 secretsFile = wipperFatFs.open("/secrets.json");
   if (!secretsFile) {
+    // file should exist, otherwise recreation is the only option
+    if (WS.brownOutCausedReset){
+      WS_DEBUG_PRINTLN_USB_DETACHED("Brownout reset detected, but not able to read secrets.json.");
+      // Can't format but could write a new one and then fsHalt
+      createSecretsFile();
+      return; // never gets here
+    }
     fsHalt("ERROR: Could not open secrets.json file for reading!");
+  }
+
+  // check if secrets.json is empty / first byte is null
+  if (secretsFile.size() < 10 || secretsFile.read() <= 0) {
+    WS_DEBUG_PRINTLN_USB_DETACHED("ERROR: secrets.json file is empty or full of nulls!");
+    secretsFile.close();
+    createSecretsFile(); // Create new secrets.json file and call fsHalt
   }
 
   // Attempt to deserialize the file's JSON document
@@ -524,6 +596,7 @@ void Wippersnapper_FS::fsHalt(String msg) {
   TinyUSBDevice.attach();
   delay(500);
   statusLEDSolid(WS_LED_STATUS_FS_WRITE);
+  WS_DEBUG_USB_REATTACHED_SO_PRINT_BUFFER();
   while (1) {
     WS_DEBUG_PRINTLN("Fatal Error: Halted execution!");
     WS_DEBUG_PRINTLN(msg.c_str());
