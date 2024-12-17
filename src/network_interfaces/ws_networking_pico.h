@@ -366,9 +366,10 @@ protected:
     if (strlen(_ssid) == 0) {
       _status = WS_SSID_INVALID;
     } else {
+      WS_DEBUG_PRINTLN("Performing wifi disconnect/reset routine");
       _disconnect();
-      delay(5000);
       WS.feedWDT();
+      WS_DELAY_WITH_WDT(2000);
       if (WS._isWiFiMulti) {
         // multi network mode
         _wifiMulti.clearAPList();
@@ -380,21 +381,27 @@ protected:
                            WS._multiNetworks[i].pass);
         }
         WS.feedWDT();
-        if (_wifiMulti.run(10000) == WL_CONNECTED) {
+        WS_DEBUG_PRINTLN("Connecting to WiFi network (multiple set)...");
+        if (_wifiMulti.run(20000) == WL_CONNECTED) {
           WS.feedWDT();
           _status = WS_NET_CONNECTED;
           return;
+        } else {
+          // Brent was suggesting something here
         }
         WS.feedWDT();
       } else {
+        WS_DEBUG_PRINT("Connecting to single WiFi network (");
+        WS_DEBUG_PRINT(_ssid);
+        WS_DEBUG_PRINTLN(")");
         WiFi.begin(_ssid, _pass);
 
         // Use the macro to retry the status check until connected / timed out
-        int lastResult;
+        int lastResult = -1;
         RETRY_FUNCTION_UNTIL_TIMEOUT(
             []() -> int { return WiFi.status(); }, // Function call each cycle
             int,                                   // return type
-            lastResult, // return variable (unused here)
+            lastResult, // return variable
             [](int status) { return status == WL_CONNECTED; }, // check
             PICO_CONNECT_TIMEOUT_MS,      // timeout interval (ms)
             PICO_CONNECT_RETRY_DELAY_MS); // interval between retries

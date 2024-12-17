@@ -387,9 +387,12 @@ protected:
                              WS._multiNetworks[i].pass);
           }
         }
+        WS_DEBUG_PRINTLN("Connecting to WiFi networks...(20s timeout)");
         if (_wifiMulti.run(20000) == WL_CONNECTED) {
+          WS_DEBUG_PRINTLN("Connected to WiFi network!");
           _status = WS_NET_CONNECTED;
         } else {
+          WS_DEBUG_PRINTLN("ERROR: Could not connect to WiFi network!");
           _status = WS_NET_DISCONNECTED;
         }
       } else {

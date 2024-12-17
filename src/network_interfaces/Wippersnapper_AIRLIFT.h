@@ -147,9 +147,8 @@ public:
 
     WS_DEBUG_PRINTLN("WipperSnapper found these WiFi networks:");
     for (uint8_t i = 0; i < n; i++) {
-      if (strcmp(WiFi.SSID(i), _ssid) == 0) {
+      if (!foundNetwork && strcmp(WiFi.SSID(i), _ssid) == 0) {
         foundNetwork = true;
-        break;
       }
       WS_DEBUG_PRINT(WiFi.SSID(i));
       WS_DEBUG_PRINT(" (");
@@ -167,11 +166,10 @@ public:
       WS_DEBUG_PRINTLN(")");
     }
 
-    if(foundNetwork == 0) {
+    if(!foundNetwork) {
       WS_DEBUG_PRINTLN("ERROR: Your requested WiFi network was not found!");
-      return false;
     }
-    return true;
+    return foundNetwork;
   }
 
   /********************************************************/
@@ -356,6 +354,7 @@ protected:
 
       // validate co-processor's firmware version
       if (!firmwareCheck()) {
+        // TODO: see if there's a way to add to bootlog without usb reattach
         WS_DEBUG_PRINTLN("Please upgrade the firmware on the ESP module to the "
                          "latest version.");
       }
