@@ -238,6 +238,13 @@ bool ws_pixels::addStrand(
       wippersnapper_pixels_v1_PixelsType_PIXELS_TYPE_NEOPIXEL) {
     // Release status LED
     // is requested pin in-use by the status pixel?
+    WS_DEBUG_PRINT("Checking if status pixel is using GPIO #");
+    WS_DEBUG_PRINTLN(strands[strandIdx].pinNeoPixel);
+    WS_DEBUG_PRINT(" = ");
+    WS_DEBUG_PRINTLN(getStatusNeoPixelPin());
+    // ws_lock
+    WS_DEBUG_PRINT("lockStatusNeoPixel: ");
+    WS_DEBUG_PRINTLN(WS.lockStatusNeoPixel);
     if (getStatusNeoPixelPin() == strands[strandIdx].pinNeoPixel &&
         WS.lockStatusNeoPixel)
       releaseStatusLED(); // release it!

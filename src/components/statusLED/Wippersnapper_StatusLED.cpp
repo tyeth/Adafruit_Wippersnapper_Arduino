@@ -100,9 +100,12 @@ void initStatusLED() {
 /****************************************************************************/
 void releaseStatusLED() {
 #ifdef USE_STATUS_NEOPIXEL
+  WS_DEBUG_PRINTLN("Releasing status NeoPixel");
   delete statusPixel; // Deallocate Adafruit_NeoPixel object, set data pin back
                       // to INPUT.
+ WS_DEBUG_PRINTLN("deleted status NeoPixel");
   WS.lockStatusNeoPixel = false; // unlock
+  WS_DEBUG_PRINTLN("unlocked status NeoPixel");
 #endif
 
 #ifdef USE_STATUS_DOTSTAR
