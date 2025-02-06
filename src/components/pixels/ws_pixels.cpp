@@ -66,10 +66,31 @@ int16_t ws_pixels::allocateStrand() {
 void ws_pixels::deallocateStrand(int16_t strandIdx) {
 
   // delete the pixel object
-  if (strands[strandIdx].neoPixelPtr != nullptr)
+  if (strands[strandIdx].neoPixelPtr != nullptr) {
     delete strands[strandIdx].neoPixelPtr;
-  if ((strands[strandIdx].dotStarPtr != nullptr))
+//// Requires update to neopixel
+// /*!
+//   @brief   Deallocate Adafruit_NeoPixel object, set data pin back to INPUT.
+// */
+// Adafruit_NeoPixel::~Adafruit_NeoPixel() {
+//   free(pixels);
+//   if (pin >= 0)
+// #if defined(ESP32)
+// #if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 0, 0)
+//       if (begun)
+//       {
+//         log_d("Deinit RMT on pin %d (destructor)", pin);
+//         espShow(pin, NULL, 0, is800KHz);
+//       }
+// #endif
+// #endif
+//     pinMode(pin, INPUT);
+// }
+    
+  }
+  if ((strands[strandIdx].dotStarPtr != nullptr)) {
     delete strands[strandIdx].dotStarPtr;
+  }
 
   // re-initialize status pixel (if pixel was prvsly used)
   if (strands[strandIdx].pinNeoPixel == getStatusNeoPixelPin() ||
