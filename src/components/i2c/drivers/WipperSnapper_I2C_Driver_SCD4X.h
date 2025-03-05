@@ -47,10 +47,12 @@ public:
   /*******************************************************************************/
   /*!
       @brief    Initializes the SCD40 sensor and begins I2C.
+      @param    pollPeriod
+                The sensor's polling period in seconds.
       @returns  True if initialized successfully, False otherwise.
   */
   /*******************************************************************************/
-  bool begin() {
+  bool begin(ulong pollPeriod) {
     _scd = new SensirionI2cScd4x();
     _scd->begin(*_i2c, _sensorAddress);
 
@@ -64,6 +66,12 @@ public:
       return false;
     }
 
+    // Takes 5seconds to have data ready, don't queue read until then
+    long currentTime = (long)millis() - ((pollPeriod * 1000) - 5000); // 5s time
+    this->setSensorCO2PeriodPrv(currentTime);
+    this->setSensorAmbientTempFPeriodPrv(currentTime);
+    this->setSensorAmbientTempPeriodPrv(currentTime);
+    this->setSensorRelativeHumidityPeriodPrv(currentTime);
     return true;
   }
 
