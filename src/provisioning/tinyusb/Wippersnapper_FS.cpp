@@ -593,8 +593,8 @@ void Wippersnapper_FS::createDisplayConfig() {
 
   #elif defined(ARDUINO_ESP32P4_DEV)
   // MIPI DSI display config for ESP32-P4 using Guition JC1060P470C as example
-  displayConfig.driver = "JD9165"; // JD9165 is the driver for the Guition
-                                   // JC1060P470C display with EK79007 LCD panel
+  strcpy(displayConfig.driver, "JD9165"); // JD9165 is the driver for the Guition
+                                  //  JC1060P470C display with EK79007 LCD panel
   displayConfig.width = 1024;
   displayConfig.height = 600;
   displayConfig.rotation = 0;
