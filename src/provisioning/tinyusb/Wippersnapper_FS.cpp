@@ -14,7 +14,7 @@
  */
 #if defined(ARDUINO_MAGTAG29_ESP32S2) || defined(ARDUINO_METRO_ESP32S2) ||     \
     defined(ARDUINO_METRO_ESP32S3) || defined(ARDUINO_FUNHOUSE_ESP32S2) ||     \
-    defined(ADAFRUIT_PYPORTAL_M4_TITANO) ||                                    \
+    defined(ADAFRUIT_PYPORTAL_M4_TITANO) || defined(ARDUINO_ESP32P4_DEV) ||    \
     defined(ADAFRUIT_METRO_M4_AIRLIFT_LITE) || defined(ADAFRUIT_PYPORTAL) ||   \
     defined(ARDUINO_ADAFRUIT_FEATHER_ESP32S2) ||                               \
     defined(ARDUINO_ADAFRUIT_QTPY_ESP32S2) ||                                  \
@@ -568,7 +568,7 @@ void Wippersnapper_FS::fsHalt(String msg, ws_led_status_t ledStatusColor) {
   }
 }
 
-#ifdef ARDUINO_FUNHOUSE_ESP32S2
+#if defined(ARDUINO_FUNHOUSE_ESP32S2) || defined(ARDUINO_ESP32P4_DEV)
 /**************************************************************************/
 /*!
     @brief    Creates a default display_config.json file on the filesystem.
@@ -580,6 +580,7 @@ void Wippersnapper_FS::createDisplayConfig() {
 
   // Create a default displayConfig structure
   displayConfig displayConfig;
+  #ifdef ARDUINO_FUNHOUSE_ESP32S2
   strcpy(displayConfig.driver, "ST7789");
   displayConfig.width = 240;
   displayConfig.height = 240;
@@ -589,6 +590,22 @@ void Wippersnapper_FS::createDisplayConfig() {
   displayConfig.spiConfig.pinMosi = 0;
   displayConfig.spiConfig.pinSck = 0;
   displayConfig.spiConfig.pinRst = 41;
+
+  #elif defined(ARDUINO_ESP32P4_DEV)
+  // MIPI DSI display config for ESP32-P4 using Guition JC1060P470C as example
+  displayConfig.driver = "JD9165"; // JD9165 is the driver for the Guition
+                                   // JC1060P470C display with EK79007 LCD panel
+  displayConfig.width = 1024;
+  displayConfig.height = 600;
+  displayConfig.rotation = 0;
+  displayConfig.spiConfig.pinCs = -1; // Not used for DSI
+  displayConfig.spiConfig.pinDc = -1; // Not used for DSI
+  displayConfig.spiConfig.pinMosi = -1; // Not used for DSI
+  displayConfig.spiConfig.pinSck = -1; // Not used for DSI
+  displayConfig.spiConfig.pinRst = -1; // Not used for DSI
+  // displayConfig.spiConfig.pinBl = 23; // Backlight pin, set to 0 for DSI
+
+  #endif
 
   // Create and fill JSON document from displayConfig
   JsonDocument doc;
@@ -614,9 +631,9 @@ void Wippersnapper_FS::parseDisplayConfig(displayConfig &dispCfg) {
   // Check if display_config.json file exists, if not, generate it
   if (!wipperFatFs_v2.exists("/display_config.json")) {
     WS_DEBUG_PRINTLN("Could not find display_config.json, generating...");
-#ifdef ARDUINO_FUNHOUSE_ESP32S2
+#if defined(ARDUINO_FUNHOUSE_ESP32S2) || defined(ARDUINO_ESP32P4_DEV)
     createDisplayConfig(); // generate a default display_config.json for
-                           // FunHouse
+                           // FunHouse and ESP32P4
 #endif
   }
 
@@ -639,7 +656,7 @@ void Wippersnapper_FS::parseDisplayConfig(displayConfig &dispCfg) {
   // Extract a displayConfig struct from the JSON document
   dispCfg = doc.as<displayConfig>();
 }
-#endif // ARDUINO_FUNHOUSE_ESP32S2
+#endif // ARDUINO_FUNHOUSE_ESP32S2 || ARDUINO_ESP32P4_DEV
 
 /**************************************************************************/
 /*!

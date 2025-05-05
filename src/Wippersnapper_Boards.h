@@ -179,6 +179,20 @@
 #define STATUS_NEOPIXEL_NUM 1
 #define USE_PSRAM ///< Board has PSRAM, use it for dynamic memory allocation
 #define I2c_STEMMA_WIRE1
+#define SD_CS_PIN 33
+#elif defined (ARDUINO_ESP32P4_DEV)
+#define BOARD_ID "esp32p4-dev"
+#define USE_STATUS_NEOPIXEL
+#define STATUS_NEOPIXEL_PIN 26
+#define STATUS_NEOPIXEL_NUM 1
+#define USE_PSRAM ///< Board has PSRAM, use it for dynamic memory allocation
+#define SD_CS_PIN -1
+#define SD_CMD_PIN 44
+#define SD_CLK_PIN 43
+#define SD_DATA0_PIN 42
+#define SD_DATA1_PIN 41
+#define SD_DATA2_PIN 40
+#define SD_DATA3_PIN 39
 #elif defined(ARDUINO_SAMD_NANO_33_IOT)
 #define BOARD_ID "nano-33-iot"
 #define USE_STATUS_LED

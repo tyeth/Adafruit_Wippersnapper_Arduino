@@ -12,7 +12,7 @@
  * BSD license, all text here must be included in any redistribution.
  *
  */
-#ifdef ARDUINO_FUNHOUSE_ESP32S2
+#if defined(ARDUINO_FUNHOUSE_ESP32S2) || defined(ARDUINO_ESP32P4_DEV)
 #include "ws_display_driver.h"
 
 /**************************************************************************/
@@ -102,10 +102,10 @@ bool ws_display_driver::begin() {
   }
 
 // Hardware-specific display commands
-#ifdef ARDUINO_FUNHOUSE_ESP32S2
+#if defined(ARDUINO_FUNHOUSE_ESP32S2) || defined(ARDUINO_ESP32P4_DEV)
   pinMode(TFT_BACKLIGHT, OUTPUT);
   digitalWrite(TFT_BACKLIGHT, HIGH);
-#endif // ARDUINO_FUNHOUSE_ESP32S2
+#endif // ARDUINO_FUNHOUSE_ESP32S2 || ARDUINO_ESP32P4_DEV
 
   // initialize lvgl_glue
   WS_DEBUG_PRINTLN("Initialize LVGL");

@@ -61,7 +61,7 @@ public:
   void createSecretsFile();
   bool getSecretsFile();
   void parseSecrets();
-#ifdef ARDUINO_FUNHOUSE_ESP32S2
+#if defined(ARDUINO_FUNHOUSE_ESP32S2) || defined(ARDUINO_ESP32P4_DEV)
   void parseDisplayConfig(displayConfig &displayFile);
   void createDisplayConfig();
 #endif
