@@ -85,7 +85,7 @@ public:
 
   /**************************************************************************/
   /*!
-  @brief  Destructor for the Adafruit IO AirLift class.
+  @brief  Destructor for the Adafruit IO ESP32 class.
   */
   /**************************************************************************/
   ~ws_wifi_esp32() {

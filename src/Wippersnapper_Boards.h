@@ -186,6 +186,9 @@
 #define STATUS_NEOPIXEL_PIN 26
 #define STATUS_NEOPIXEL_NUM 1
 #define USE_PSRAM ///< Board has PSRAM, use it for dynamic memory allocation
+#define USE_LITTLEFS
+// #define USE_TINYUSB
+#define TFT_BACKLIGHT 23
 #define SD_CS_PIN -1
 #define SD_CMD_PIN 44
 #define SD_CLK_PIN 43
