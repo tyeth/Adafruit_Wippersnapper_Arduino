@@ -143,6 +143,7 @@ public:
     int n = WiFi.scanNetworks();
     if (n == 0) {
       WS_DEBUG_PRINTLN("ERROR: No WiFi networks found!");
+      WiFi.scanDelete();
       return false;
     }
 
@@ -153,6 +154,7 @@ public:
         WS_DEBUG_PRINT(_ssid);
         WS_DEBUG_PRINT(") found! RSSI: ");
         WS_DEBUG_PRINTLN(WiFi.RSSI(i));
+        WiFi.scanDelete();
         return true;
       }
       if (WsV2._isWiFiMultiV2) {
@@ -164,6 +166,7 @@ public:
             WS_DEBUG_PRINT(WsV2._multiNetworksV2[j].ssid);
             WS_DEBUG_PRINT(") found! RSSI: ");
             WS_DEBUG_PRINTLN(WiFi.RSSI(i));
+            WiFi.scanDelete();
             return true;
           }
         }
@@ -180,6 +183,7 @@ public:
       WS_DEBUG_PRINTLN("dB");
     }
 
+    WiFi.scanDelete();
     return false;
   }
 
