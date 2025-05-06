@@ -104,6 +104,8 @@ FRESULT format_fs_fat12(void) {
 /**************************************************************************/
 Wippersnapper_FS::Wippersnapper_FS() {
   // Detach USB device during init.
+  WS_DEBUG_PRINTLN("Detaching USB device during filesystem init in 3secs.");
+  delay(1000);
   TinyUSBDevice.detach();
   // Wait for detach
   delay(500);
