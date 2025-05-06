@@ -12,10 +12,9 @@
  * BSD license, all text here must be included in any redistribution.
  *
  */
-// defined(ARDUINO_ESP32P4_DEV) ||                                            
 #if defined(ARDUINO_MAGTAG29_ESP32S2) || defined(ARDUINO_METRO_ESP32S2) ||     \
     defined(ARDUINO_METRO_ESP32S3) || defined(ARDUINO_FUNHOUSE_ESP32S2) ||     \
-    defined(ADAFRUIT_PYPORTAL_M4_TITANO) ||                                    \
+    defined(ADAFRUIT_PYPORTAL_M4_TITANO) || defined(ARDUINO_ESP32P4_DEV) ||    \
     defined(ADAFRUIT_METRO_M4_AIRLIFT_LITE) || defined(ADAFRUIT_PYPORTAL) ||   \
     defined(ARDUINO_ADAFRUIT_FEATHER_ESP32S2) ||                               \
     defined(ARDUINO_ADAFRUIT_QTPY_ESP32S2) ||                                  \
