@@ -29,8 +29,8 @@ jobs:
       - name: Get WipperSnapper version
         run: |
           git fetch --prune --unshallow --tags
-          git describe --dirty --tags
-          echo >>$GITHUB_ENV WS_VERSION=$(git describe --dirty --tags)
+          git describe --dirty --tags || echo "1.0.0-tyeth"
+          echo >>$GITHUB_ENV WS_VERSION=$(git describe --dirty --tags || echo "1.0.0-tyeth")
       - uses: actions/checkout@v4
         with:
           repository: adafruit/ci-arduino
@@ -201,8 +201,8 @@ jobs:
       - name: Get WipperSnapper version
         run: |
           git fetch --prune --unshallow --tags
-          git describe --dirty --tags
-          echo >>$GITHUB_ENV WS_VERSION=$(git describe --dirty --tags)
+          git describe --dirty --tags || echo "1.0.0-tyeth"
+          echo >>$GITHUB_ENV WS_VERSION=$(git describe --dirty --tags || echo "1.0.0-tyeth")
       - uses: actions/checkout@v4
         with:
           repository: adafruit/ci-arduino
@@ -306,8 +306,8 @@ jobs:
       - name: Get WipperSnapper version
         run: |
           git fetch --prune --unshallow --tags
-          git describe --dirty --tags
-          echo >>$GITHUB_ENV WS_VERSION=$(git describe --dirty --tags)
+          git describe --dirty --tags || echo "1.0.0-tyeth"
+          echo >>$GITHUB_ENV WS_VERSION=$(git describe --dirty --tags || echo "1.0.0-tyeth")
       - uses: actions/checkout@v4
         with:
           repository: adafruit/ci-arduino
@@ -436,8 +436,8 @@ jobs:
       - name: Get WipperSnapper version
         run: |
           git fetch --prune --unshallow --tags
-          git describe --dirty --tags
-          echo >>$GITHUB_ENV WS_VERSION=$(git describe --dirty --tags)
+          git describe --dirty --tags || echo "1.0.0-tyeth"
+          echo >>$GITHUB_ENV WS_VERSION=$(git describe --dirty --tags || echo "1.0.0-tyeth")
       - uses: actions/checkout@v4
         with:
           repository: adafruit/ci-arduino
@@ -510,8 +510,8 @@ jobs:
       - name: Get WipperSnapper version
         run: |
           git fetch --prune --unshallow --tags
-          git describe --dirty --tags
-          echo >>$GITHUB_ENV WS_VERSION=$(git describe --dirty --tags)
+          git describe --dirty --tags || echo "1.0.0-tyeth"
+          echo >>$GITHUB_ENV WS_VERSION=$(git describe --dirty --tags || echo "1.0.0-tyeth")
       - uses: actions/checkout@v4
         with:
           repository: adafruit/ci-arduino
@@ -581,8 +581,8 @@ jobs:
       - name: Get WipperSnapper version
         run: |
           git fetch --prune --unshallow --tags
-          git describe --dirty --tags
-          echo >>$GITHUB_ENV WS_VERSION=$(git describe --dirty --tags)
+          git describe --dirty --tags || echo "1.0.0-tyeth"
+          echo >>$GITHUB_ENV WS_VERSION=$(git describe --dirty --tags || echo "1.0.0-tyeth")
       - uses: actions/checkout@v4
         with:
           repository: adafruit/ci-arduino
@@ -669,8 +669,8 @@ jobs:
       - name: Get WipperSnapper version
         run: |
           git fetch --prune --unshallow --tags
-          git describe --dirty --tags
-          echo >>$GITHUB_ENV WS_VERSION=$(git describe --dirty --tags)
+          git describe --dirty --tags || echo "1.0.0-tyeth"
+          echo >>$GITHUB_ENV WS_VERSION=$(git describe --dirty --tags || echo "1.0.0-tyeth")
       - uses: actions/checkout@v4
         with:
           repository: adafruit/ci-arduino
@@ -765,8 +765,8 @@ jobs:
       - name: Get WipperSnapper version
         run: |
           git fetch --prune --unshallow --tags
-          git describe --dirty --tags
-          echo >>$GITHUB_ENV WS_VERSION=$(git describe --dirty --tags)
+          git describe --dirty --tags || echo "1.0.0-tyeth"
+          echo >>$GITHUB_ENV WS_VERSION=$(git describe --dirty --tags || echo "1.0.0-tyeth")
       - uses: actions/checkout@v4
         with:
           repository: adafruit/ci-arduino
