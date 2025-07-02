@@ -45,6 +45,7 @@ jobs:
         run: bash ci/actions_install.sh
       - name: Install extra Arduino libraries
         run: |
+          git clone --quiet https://github.com/tyeth/omron-devhub_d6t-arduino.git /home/runner/Arduino/libraries/OmronD6T
           git clone --quiet --branch 2.2.54 https://github.com/adafruit/SdFat.git /home/runner/Arduino/libraries/SdFat
           git clone --quiet https://github.com/milesburton/Arduino-Temperature-Control-Library.git /home/runner/Arduino/libraries/Arduino-Temperature-Control-Library
           git clone --quiet https://github.com/pstolarz/OneWireNg.git /home/runner/Arduino/libraries/OneWireNg
@@ -212,6 +213,7 @@ jobs:
         run: bash ci/actions_install.sh
       - name: Install extra Arduino libraries
         run: |
+          git clone --quiet https://github.com/tyeth/omron-devhub_d6t-arduino.git /home/runner/Arduino/libraries/OmronD6T
           git clone --quiet https://github.com/milesburton/Arduino-Temperature-Control-Library.git /home/runner/Arduino/libraries/Arduino-Temperature-Control-Library
           git clone --quiet https://github.com/pstolarz/OneWireNg.git /home/runner/Arduino/libraries/OneWireNg
           git clone --quiet https://github.com/adafruit/Adafruit_HX8357_Library.git /home/runner/Arduino/libraries/Adafruit_HX8357_Library
@@ -322,6 +324,7 @@ jobs:
         run: bash ci/actions_install.sh
       - name: Install extra Arduino libraries
         run: |
+          git clone --quiet https://github.com/tyeth/omron-devhub_d6t-arduino.git /home/runner/Arduino/libraries/OmronD6T
           git clone --quiet https://github.com/milesburton/Arduino-Temperature-Control-Library.git /home/runner/Arduino/libraries/Arduino-Temperature-Control-Library
           git clone --quiet https://github.com/pstolarz/OneWireNg.git /home/runner/Arduino/libraries/OneWireNg
       - name: Download stable Nanopb
@@ -448,6 +451,7 @@ jobs:
         # manually install Adafruit WiFiNINA library fork
       - name: Install extra Arduino libraries
         run: |
+          git clone --quiet https://github.com/tyeth/omron-devhub_d6t-arduino.git /home/runner/Arduino/libraries/OmronD6T
           git clone --quiet https://github.com/adafruit/WiFiNINA.git /home/runner/Arduino/libraries/WiFiNINA
           git clone --quiet https://github.com/milesburton/Arduino-Temperature-Control-Library.git /home/runner/Arduino/libraries/Arduino-Temperature-Control-Library
           git clone --quiet https://github.com/PaulStoffregen/OneWire.git /home/runner/Arduino/libraries/OneWire
@@ -523,6 +527,7 @@ jobs:
       - name: Install extra Arduino libraries
         run: |
           git clone --quiet https://github.com/pstolarz/OneWireNg.git /home/runner/Arduino/libraries/OneWireNg
+          git clone --quiet https://github.com/tyeth/omron-devhub_d6t-arduino.git /home/runner/Arduino/libraries/OmronD6T
           git clone --quiet https://github.com/pstolarz/Arduino-Temperature-Control-Library.git /home/runner/Arduino/libraries/Arduino-Temperature-Control-Library
           git clone --quiet https://github.com/adafruit/Adafruit_TinyUSB_Arduino /home/runner/Arduino/libraries/Adafruit_TinyUSB_Arduino
       - name: Download stable Nanopb
@@ -592,6 +597,7 @@ jobs:
         run: bash ci/actions_install.sh
       - name: Install extra Arduino library
         run: |
+          git clone --quiet https://github.com/tyeth/omron-devhub_d6t-arduino.git /home/runner/Arduino/libraries/OmronD6T
           git clone --quiet https://github.com/milesburton/Arduino-Temperature-Control-Library.git /home/runner/Arduino/libraries/Arduino-Temperature-Control-Library
           git clone --quiet https://github.com/PaulStoffregen/OneWire.git /home/runner/Arduino/libraries/OneWire
       - name: Download stable Nanopb
@@ -680,6 +686,7 @@ jobs:
         run: bash ci/actions_install.sh
       - name: Install extra Arduino libraries
         run: |
+          git clone --quiet https://github.com/tyeth/omron-devhub_d6t-arduino.git /home/runner/Arduino/libraries/OmronD6T
           git clone --quiet https://github.com/milesburton/Arduino-Temperature-Control-Library.git /home/runner/Arduino/libraries/Arduino-Temperature-Control-Library
           git clone --quiet https://github.com/pstolarz/OneWireNg.git /home/runner/Arduino/libraries/OneWireNg
           git clone --quiet https://github.com/adafruit/Adafruit_HX8357_Library.git /home/runner/Arduino/libraries/Adafruit_HX8357_Library
@@ -781,6 +788,7 @@ jobs:
         run: bash ci/actions_install.sh
       - name: Install extra Arduino libraries
         run: |
+          git clone --quiet https://github.com/tyeth/omron-devhub_d6t-arduino.git /home/runner/Arduino/libraries/OmronD6T
           git clone --quiet https://github.com/milesburton/Arduino-Temperature-Control-Library.git /home/runner/Arduino/libraries/Arduino-Temperature-Control-Library
           git clone --quiet https://github.com/pstolarz/OneWireNg.git /home/runner/Arduino/libraries/OneWireNg
       - name: Download stable Nanopb
