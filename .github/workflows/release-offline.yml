@@ -199,9 +199,10 @@ jobs:
             if [ -d "ws-boards/boards/${board_name//_/-}" ]; then
               board_name=${board_name//_/-}
               echo "Found alternative board definition folder ws-boards/boards/${board_name//_/-}."
-            elif [ -d "ws-boards/boards/${board_name//_//}" ]; then
-              board_name=${board_name//_//}
-              echo "Found alternative board definition folder ws-boards/boards/${board_name//_//}."
+            # Remove all underscores if still not found
+            elif [ -d "ws-boards/boards/${board_name//_}" ]; then
+              board_name=${board_name//_}
+              echo "Found alternative board definition folder ws-boards/boards/${board_name//_}."
             else
               echo "Error: Board definition folder ws-boards/boards/${board_name} does not exist."
               exit 1
