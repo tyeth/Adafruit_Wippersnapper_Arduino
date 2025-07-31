@@ -218,11 +218,13 @@
 #define USE_TINYUSB
 #define USE_STATUS_LED
 #define STATUS_LED_PIN 64
+#define SD_CS_PIN 17
 #elif defined(ARDUINO_RASPBERRY_PI_PICO_2W)
 #define BOARD_ID "rpi-pico-2w"
 #define USE_TINYUSB
 #define USE_STATUS_LED
 #define STATUS_LED_PIN 64
+#define SD_CS_PIN 17
 #elif defined(ARDUINO_RASPBERRY_PI_PICO)
 #define BOARD_ID "rpi-pico"
 #define USE_TINYUSB
@@ -250,6 +252,7 @@
 #define STATUS_NEOPIXEL_PIN PIN_NEOPIXEL
 #define STATUS_NEOPIXEL_NUM NUM_NEOPIXEL
 #define SD_USE_SPI_1
+#define SD_CS_PIN 39
 #elif defined(ARDUINO_ADAFRUIT_FEATHER_ESP32C6)
 #define BOARD_ID "feather-esp32c6"
 #define USE_LITTLEFS
