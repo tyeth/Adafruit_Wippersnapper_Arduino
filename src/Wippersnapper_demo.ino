@@ -10,8 +10,14 @@
 // All text above must be included in any redistribution.
 
 #include "ws_adapters.h"
-//ws_adapter_wifi wipper;
+// Can't check if typedef available so use WS_WIFI_ADAPTER/WS_OFFLINE_ADAPTER
+#ifdef WS_WIFI_ADAPTER
+ws_adapter_wifi wipper;
+#elif defined(WS_OFFLINE_ADAPTER)
 ws_adapter_offline wipper;
+#else
+#error "No valid ws_adapter_wifi or ws_adapter_offline defined! Please check your board configuration."
+#endif
 #define WS_DEBUG // Enable debug output!
 
 void setup() {
