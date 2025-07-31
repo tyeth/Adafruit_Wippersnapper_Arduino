@@ -11,10 +11,10 @@
 
 #include "ws_adapters.h"
 // Can't check if typedef available so use WS_WIFI_ADAPTER/WS_OFFLINE_ADAPTER
-#ifdef WS_WIFI_ADAPTER
-ws_adapter_wifi wipper;
-#elif defined(WS_OFFLINE_ADAPTER)
+#if defined(OFFLINE_MODE_WOKWI) || defined(WS_OFFLINE_ADAPTER)
 ws_adapter_offline wipper;
+#elif defined(WS_WIFI_ADAPTER)
+ws_adapter_wifi wipper;
 #else
 #error "No valid ws_adapter_wifi or ws_adapter_offline defined! Please check your board configuration."
 #endif
