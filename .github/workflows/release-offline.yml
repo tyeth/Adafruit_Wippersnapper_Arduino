@@ -195,17 +195,19 @@ jobs:
           board_name=${board_name#wippersnapper_}
           # check folder name exists, otherwise do replace of underscore with dash, or blank
           if [ ! -d "ws-boards/boards/${board_name}" ]; then
+            echo "Board definition folder ws-boards/boards/${board_name} does not exist, checking for alternative names."
             if [ -d "ws-boards/boards/${board_name//_/-}" ]; then
               board_name=${board_name//_/-}
+              echo "Found alternative board definition folder ws-boards/boards/${board_name//_/-}."
             elif [ -d "ws-boards/boards/${board_name//_//}" ]; then
               board_name=${board_name//_//}
+              echo "Found alternative board definition folder ws-boards/boards/${board_name//_//}."
             else
               echo "Error: Board definition folder ws-boards/boards/${board_name} does not exist."
               exit 1
             fi
           fi
-          # check again if folder exists, otherwise replace underscore with blank
-          content=$(cat ws-boards/boards/${board_name//_/-}/definition.json)
+          content=$(cat ws-boards/boards/${board_name}/definition.json)
           {
             echo 'boardJson<<EOF'
             echo $content
