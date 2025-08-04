@@ -10,8 +10,9 @@
 // All text above must be included in any redistribution.
 
 #include "ws_adapters.h"
-// Can't check if typedef available so use WS_WIFI_ADAPTER/WS_OFFLINE_ADAPTER
-#if defined(OFFLINE_MODE_WOKWI) || defined(WS_WIFI_ADAPTER)
+#if defined(OFFLINE_MODE_WOKWI)
+ws_adapter_wifi wipper; // Wokwi offline mode uses a wifi adapter
+#elif defined(WS_WIFI_ADAPTER)
 ws_adapter_wifi wipper;
 #elif defined(WS_OFFLINE_ADAPTER)
 ws_adapter_offline wipper;
