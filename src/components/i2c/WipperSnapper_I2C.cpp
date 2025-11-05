@@ -551,6 +551,17 @@ bool WipperSnapper_Component_I2C::initI2CDevice(
     _spa06_003->configureDriver(msgDeviceInitReq);
     drivers.push_back(_spa06_003);
     WS_DEBUG_PRINTLN("SPA06-003 Initialized Successfully!");
+  } else if (strcmp("sths34pf80", msgDeviceInitReq->i2c_device_name) == 0) {
+    _sths34pf80 = new WipperSnapper_I2C_Driver_STHS34PF80(this->_i2c, i2cAddress);
+    if (!_sths34pf80->begin()) {
+      WS_DEBUG_PRINTLN("ERROR: Failed to initialize STHS34PF80!");
+      _busStatusResponse =
+          wippersnapper_i2c_v1_BusResponse_BUS_RESPONSE_DEVICE_INIT_FAIL;
+      return false;
+    }
+    _sths34pf80->configureDriver(msgDeviceInitReq);
+    drivers.push_back(_sths34pf80);
+    WS_DEBUG_PRINTLN("STHS34PF80 Initialized Successfully!");
   } else if (strcmp("mcp3421", msgDeviceInitReq->i2c_device_name) == 0) {
     _mcp3421 = new WipperSnapper_I2C_Driver_MCP3421(this->_i2c, i2cAddress);
     if (!_mcp3421->begin()) {
