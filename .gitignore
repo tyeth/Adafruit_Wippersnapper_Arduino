@@ -65,3 +65,7 @@ tests/
 venv/
 
 Doxyfile
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+.vs/
